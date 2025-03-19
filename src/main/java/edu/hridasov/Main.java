@@ -25,13 +25,20 @@ public class Main extends HttpServlet {
         resp.getWriter().print("Hello from Java!\n");
     }
 
-    public static void main(String[] args) throws Exception{
-        Server server = new Server(Integer.valueOf(System.getenv("PORT")));
+    public static void main(String[] args) throws Exception {
+        String portStr = System.getenv("PORT");
+        System.out.println("PORT value: " + portStr); // Отладочный вывод
+
+        int port = (portStr != null) ? Integer.parseInt(portStr) : 8080; // Значение по умолчанию
+        Server server = new Server(port);
+
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
         server.setHandler(context);
-        context.addServlet(new ServletHolder(new Main()),"/*");
+        context.addServlet(new ServletHolder(new Main()), "/*");
         server.start();
         server.join();
+
     }
+
 }
